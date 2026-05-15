@@ -16,6 +16,7 @@ export const env = {
   NODE_ENV: optional('NODE_ENV', 'development'),
   PORT: parseInt(optional('PORT', '3000'), 10),
   BASE_URL: optional('BASE_URL', 'http://localhost:3000'),
+  FRONTEND_URL: optional('FRONTEND_URL', 'http://localhost:3000'),
 
   DATABASE_URL: required('DATABASE_URL'),
 

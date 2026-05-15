@@ -15,7 +15,7 @@ export function createApp(): Application {
   
   app.use(
     cors({
-      origin: env.BASE_URL.replace(':3001', ':3000'), // Allow frontend origin
+      origin: [env.FRONTEND_URL, 'http://localhost:3000'], // Allow production frontend and local frontend
       credentials: true,
     })
   );
