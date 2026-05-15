@@ -7,12 +7,18 @@ const globalForRedis = globalThis as unknown as {
 };
 
 function createRedisClient(): Redis {
-  const client = new Redis({
-    host: env.REDIS_HOST,
-    port: env.REDIS_PORT,
+  const options: any = {
     maxRetriesPerRequest: null, // Required by BullMQ
     enableReadyCheck: false,
-  });
+  };
+
+  const client = env.REDIS_URL
+    ? new Redis(env.REDIS_URL, options)
+    : new Redis({
+        ...options,
+        host: env.REDIS_HOST,
+        port: env.REDIS_PORT,
+      });
 
   client.on('connect', () => {
     console.log('[Redis] Connected successfully');

@@ -19,6 +19,7 @@ export const env = {
 
   DATABASE_URL: required('DATABASE_URL'),
 
+  REDIS_URL: optional('REDIS_URL', ''),
   REDIS_HOST: optional('REDIS_HOST', 'localhost'),
   REDIS_PORT: parseInt(optional('REDIS_PORT', '6379'), 10),
 
