@@ -7,6 +7,7 @@ import { urlRouter } from './modules/urls/url.router';
 import { redirectRouter } from './modules/urls/redirect.router';
 import { authRouter } from './modules/auth/auth.routes';
 import { analyticsRouter } from './modules/analytics/analytics.routes';
+import { setupSwagger } from './config/swagger';
 import { env } from './config/env';
 
 export function createApp(): Application {
@@ -26,6 +27,7 @@ export function createApp(): Application {
   app.set('trust proxy', 1);
 
   app.use(globalRateLimiter);
+  setupSwagger(app as any);
 
   app.get('/health', (_req: Request, res: Response) => {
     res.status(200).json({
