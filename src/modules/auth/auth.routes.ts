@@ -20,6 +20,8 @@ const router = Router();
  *             properties:
  *               email:
  *                 type: string
+ *               name:
+ *                 type: string
  *               password:
  *                 type: string
  *     responses:
