@@ -4,7 +4,7 @@ import { env } from '../../config/env';
 import { getUserById } from './auth.service';
 import { createError } from '../../utils/errors';
 
-export async function protect(req: Request, res: Response, next: NextFunction) {
+export async function protect(req: Request, _res: Response, next: NextFunction) {
   try {
     const token = req.cookies.token;
 
@@ -35,7 +35,7 @@ export async function protect(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function optionalAuth(req: Request, res: Response, next: NextFunction) {
+export async function optionalAuth(req: Request, _res: Response, next: NextFunction) {
   try {
     const token = req.cookies.token;
 
