@@ -86,4 +86,47 @@ router.post('/logout', authController.logout);
  */
 router.get('/me', protect, authController.me);
 
+/**
+ * @openapi
+ * /api/auth/profile:
+ *   patch:
+ *     tags: [Auth]
+ *     summary: Update user profile details
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *       401:
+ *         description: Not authenticated
+ */
+router.patch('/profile', protect, authController.updateProfile);
+
+/**
+ * @openapi
+ * /api/auth/profile:
+ *   delete:
+ *     tags: [Auth]
+ *     summary: Delete user account and clear session
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Account deleted successfully
+ *       401:
+ *         description: Not authenticated
+ */
+router.delete('/profile', protect, authController.deleteAccount);
+
 export { router as authRouter };

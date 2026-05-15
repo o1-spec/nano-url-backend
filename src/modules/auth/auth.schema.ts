@@ -13,3 +13,10 @@ export const LoginSchema = z.object({
 
 export type RegisterInput = z.infer<typeof RegisterSchema>;
 export type LoginInput = z.infer<typeof LoginSchema>;
+
+export const UpdateUserSchema = z.object({
+  email: z.string().email('Invalid email address').optional(),
+  name: z.string().min(1, 'Name cannot be empty').optional(),
+});
+
+export type UpdateUserInput = z.infer<typeof UpdateUserSchema>;

@@ -58,3 +58,16 @@ export async function getUserById(id: bigint) {
     where: { id },
   });
 }
+
+export async function updateUser(id: bigint, input: any) {
+  return prisma.user.update({
+    where: { id },
+    data: input,
+  });
+}
+
+export async function deleteUser(id: bigint) {
+  return prisma.user.delete({
+    where: { id },
+  });
+}

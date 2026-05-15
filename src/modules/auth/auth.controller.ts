@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { RegisterSchema, LoginSchema } from './auth.schema';
+import { RegisterSchema, LoginSchema, UpdateUserSchema } from './auth.schema';
 import * as authService from './auth.service';
 import { serializeBigInt } from '../../utils/serialization';
 import { env } from '../../config/env';
@@ -76,4 +76,41 @@ export async function me(_req: Request, res: Response) {
     success: true,
     data: serializeBigInt(userWithoutPassword),
   });
+}
+
+export async function updateProfile(req: Request, res: Response, next: NextFunction) {
+  try {
+    const user = (req as any).user;
+    const parsed = UpdateUserSchema.safeParse(req.body);
+    
+    if (!parsed.success) {
+      res.status(400).json({
+        success: false,
+        error: { message: 'Validation failed', details: parsed.error.flatten() },
+      });
+      return;
+    }
+
+    const updatedUser = await authService.updateUser(user.id, parsed.data);
+    const { password, ...userWithoutPassword } = updatedUser;
+
+    res.status(200).json({
+      success: true,
+      data: serializeBigInt(userWithoutPassword),
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function deleteAccount(req: Request, res: Response, next: NextFunction) {
+  try {
+    const user = (req as any).user;
+    await authService.deleteUser(user.id);
+    
+    res.clearCookie(COOKIE_NAME, cookieOptions);
+    res.status(200).json({ success: true, message: 'Account deleted successfully' });
+  } catch (err) {
+    next(err);
+  }
 }
