@@ -40,6 +40,8 @@ export function createApp(): Application {
 
   app.use('/api/auth', authRouter);
   app.use('/api/urls', urlRouter);
+  app.use('/api/me/urls', urlRouter); // Alias for frontend compatibility
+  app.use('/api/urls', analyticsRouter); // Alias for stats compatibility
   app.use('/api/analytics', analyticsRouter);
 
   app.use('/', redirectRouter);
