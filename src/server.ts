@@ -2,6 +2,7 @@ import { createApp } from './app';
 import { env } from './config/env';
 import { prisma } from './config/prisma';
 import { redis } from './config/redis';
+import { startAnalyticsWorker } from './queues/analytics.worker';
 
 async function bootstrap(): Promise<void> {
   console.log('[Server] Connecting to PostgreSQL...');
@@ -12,7 +13,16 @@ async function bootstrap(): Promise<void> {
   await redis.ping();
   console.log('[Server] ✓ Redis connected');
 
-  // Worker is now managed in a separate process via src/worker.ts
+  // ── Start Background Worker ──
+  // In a free deployment, we run the BullMQ worker in the same process
+  // as the web server to save resources (only 1 web service required).
+  let analyticsWorker: any;
+  if (env.NODE_ENV === 'production' || process.env.RUN_WORKER_WITH_SERVER === 'true') {
+    console.log('[Server] Starting built-in background worker...');
+    analyticsWorker = startAnalyticsWorker();
+  } else {
+    console.log('[Server] Skipping built-in worker (managed by separate process in dev)');
+  }
 
   const app = createApp();
 
@@ -28,6 +38,11 @@ async function bootstrap(): Promise<void> {
 
     server.close(async () => {
       console.log('[Server] HTTP server closed');
+
+      if (analyticsWorker) {
+        await analyticsWorker.close();
+        console.log('[Server] Built-in analytics worker closed');
+      }
 
       await prisma.$disconnect();
       console.log('[Server] PostgreSQL disconnected');
